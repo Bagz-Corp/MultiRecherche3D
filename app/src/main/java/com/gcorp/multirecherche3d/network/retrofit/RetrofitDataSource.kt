@@ -3,6 +3,7 @@ package com.gcorp.multirecherche3d.network.retrofit
 import androidx.compose.ui.util.trace
 import com.gcorp.multirecherche3d.network.RemoteDataSource
 import com.gcorp.multirecherche3d.network.model.SketchFabModel
+import com.google.gson.GsonBuilder
 import dagger.Lazy
 import okhttp3.Call
 import okhttp3.Interceptor
@@ -19,6 +20,11 @@ internal class RetrofitDataSource @Inject constructor(
     okhttpCallFactory: Lazy<Call.Factory>,
 ): RemoteDataSource {
 
+    private val okHttpClient = OkHttpClient
+        .Builder()
+        .addInterceptor(LogInterceptor())
+        .build()
+
     private val apiSource : RetrofitApi = trace("Retrofit") {
         Retrofit
             .Builder()
@@ -27,12 +33,7 @@ internal class RetrofitDataSource @Inject constructor(
             // to prevent initializing OkHttp on the main thread.
             .callFactory { okhttpCallFactory.get().newCall(it) }
             .addConverterFactory(GsonConverterFactory.create())
-            .client(
-                OkHttpClient
-                    .Builder()
-                    .addInterceptor(LogInterceptor())
-                    .build()
-            )
+            .client(okHttpClient)
             .build()
             .create(RetrofitApi::class.java)
     }
