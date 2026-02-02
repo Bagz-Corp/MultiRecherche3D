@@ -6,7 +6,7 @@ data class ModelItem (
     val thumbnails: List<Thumbnail>,
     val title: String,
     val likeCount: Int,
-    val url: URI
+    val url: String
 )
 
 data class Thumbnail(

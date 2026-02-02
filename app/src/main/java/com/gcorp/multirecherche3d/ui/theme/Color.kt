@@ -9,3 +9,10 @@ val Pink80 = Color(0xFFEFB8C8)
 val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
+
+val SlateBlue = Color(0xFF5F7D95)
+val SageGreen = Color(0xFFB4D4C4)
+val OffWhite = Color(0xFFF8F9FA)
+val SoftGrey = Color(0xFFE2E8F0)
+val Charcoal = Color(0xFF2D3748) // Softer than pure black
+

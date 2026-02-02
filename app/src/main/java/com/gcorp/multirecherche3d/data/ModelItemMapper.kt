@@ -15,5 +15,5 @@ fun SketchFabModel.toModelItem() = ModelItem(
     },
     title = this.name,
     likeCount = this.likeCount,
-    url = URI(viewerUrl)
+    url = viewerUrl
 )

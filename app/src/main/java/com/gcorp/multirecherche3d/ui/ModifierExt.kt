@@ -62,7 +62,6 @@ fun Modifier.shimmer(cornerRadius: Dp = 0.dp): Modifier {
 @Preview(showBackground = true)
 @Composable
 private fun BoxShimmer() {
-
     Box(
         modifier = Modifier
             .width(120.dp)
