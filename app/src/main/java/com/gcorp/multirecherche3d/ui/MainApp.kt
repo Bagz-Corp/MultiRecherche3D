@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -60,6 +61,8 @@ fun MainApp () {
 
     val context = LocalContext.current
 
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Surface {
         Scaffold(
             modifier = Modifier,
@@ -67,7 +70,10 @@ fun MainApp () {
         ) { paddingValues ->
             MainResultScreen(
                 modifier = Modifier.padding(paddingValues),
-                onSearch = viewModel::updateQuery,
+                onSearch = {query ->
+                    keyboardController?.hide()
+                    viewModel.updateQuery(query)
+                },
                 onResultTap = { uri ->
                     println("Opening result url $uri")
                     viewModel.customTabsIntent.launchUrl(context, uri)
