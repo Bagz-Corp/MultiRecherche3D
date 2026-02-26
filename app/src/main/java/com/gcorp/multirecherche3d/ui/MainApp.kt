@@ -3,6 +3,7 @@ package com.gcorp.multirecherche3d.ui
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +22,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SearchBarDefaults.InputField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -31,9 +33,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -47,6 +49,7 @@ import com.gcorp.multirecherche3d.ui.designSystem.ResultCard
 import com.gcorp.multirecherche3d.ui.theme.GregTheme
 import com.gcorp.multirecherche3d.ui.theme.OffWhite
 import com.gcorp.multirecherche3d.ui.theme.SageGreen
+import com.gcorp.multirecherche3d.ui.theme.SoftGrey
 import com.gcorp.multirecherche3d.ui.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,13 +62,14 @@ fun MainApp () {
 
     Surface {
         Scaffold(
-            modifier = Modifier.background(color = SageGreen),
+            modifier = Modifier,
             topBar = { GregTopAppBar() }
         ) { paddingValues ->
             MainResultScreen(
                 modifier = Modifier.padding(paddingValues),
                 onSearch = viewModel::updateQuery,
                 onResultTap = { uri ->
+                    println("Opening result url $uri")
                     viewModel.customTabsIntent.launchUrl(context, uri)
                 },
                 sketchFabResults = uiState.sketchFabResults,
@@ -82,7 +86,6 @@ fun GregSearchBar(
     onSearch: (String) -> Unit
 ) {
     var searchText by remember { mutableStateOf("poulpe") }
-
     SearchBar(
         inputField = {
             InputField(
@@ -104,6 +107,9 @@ fun GregSearchBar(
         expanded = false,
         onExpandedChange = {},
         modifier = Modifier,
+        colors = SearchBarDefaults.colors(
+            containerColor = SoftGrey
+        )
     ) {}
 }
 
@@ -118,7 +124,7 @@ fun MainResultScreen(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .background(color = SageGreen),
+            .background(brush = Brush.verticalGradient(listOf(SageGreen, OffWhite))),
         contentPadding = PaddingValues(horizontal = 16.dp),
         verticalArrangement = Arrangement.Top,
     ) {
@@ -153,8 +159,7 @@ fun SearchResultTitle(
 ) {
     Text(
         text = title.uppercase(),
-        style = Typography.headlineLarge,
-        fontWeight = FontWeight.Bold,
+        style = Typography.headlineSmall,
         modifier = modifier,
         color = Color.Black
     )
@@ -171,20 +176,29 @@ fun SearchResults(
         rowState.animateScrollToItem(0)
     }
 
-    LazyRow(
-        modifier = modifier.padding(vertical = 16.dp),
-        state = rowState
+    BoxWithConstraints(
+        modifier = Modifier.fillMaxWidth()
     ) {
-        items(results) {
-            ResultCard(
-                cardData = it,
-                onClick = onCardClick
-            )
-            Spacer(
-                modifier = Modifier.width(4.dp)
-            )
+        // Responsive to screens, we aim to display 3 cards at all times
+        val size = maxOf((maxWidth.div(3)), 100.dp)
+
+        LazyRow(
+            modifier = modifier.padding(vertical = 16.dp),
+            state = rowState
+        ) {
+            items(results) {
+                ResultCard(
+                    cardData = it,
+                    onClick = onCardClick
+                )
+                Spacer(
+                    modifier = Modifier.width(4.dp)
+                )
+            }
         }
     }
+
+
 }
 
 @Composable
@@ -214,12 +228,11 @@ fun Section(
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun MainPreview() {
     GregTheme {
         Scaffold(
-            modifier = Modifier.background(color = SageGreen),
             topBar = { GregTopAppBar() }
         ) { paddingValues ->
             MainResultScreen(
@@ -233,6 +246,7 @@ private fun MainPreview() {
     }
 }
 
+// preview items
 private val modelItems by lazy {
     List(4) {
         ModelItem(

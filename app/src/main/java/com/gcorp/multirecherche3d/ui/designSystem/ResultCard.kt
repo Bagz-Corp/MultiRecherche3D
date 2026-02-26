@@ -48,12 +48,11 @@ fun ResultCard(
 ) {
     ElevatedCard(
         modifier = modifier
-            .width(300.dp)
-            .height(300.dp)
+            .width(200.dp)
+            .height(200.dp)
             .clip(RoundedCornerShape(24.dp)),
         colors = CardDefaults.cardColors().copy(
-            containerColor = SoftGrey,
-            contentColor = Color.Black
+            containerColor = SoftGrey
         )
     ) {
         Column(
@@ -75,7 +74,7 @@ fun ResultCard(
             Text(
                 modifier = Modifier.padding(horizontal = 8.dp),
                 text = cardData.title,
-                style = Typography.titleMedium,
+                style = Typography.titleSmall,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -151,13 +150,11 @@ fun ResultCardBottom(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(horizontal = 8.dp),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
         ElevatedButton(
-            onClick = {
-                onClick(cardUrl)
-            }
+            onClick = { onClick(cardUrl) }
         ) {
             Text(
                 text = "Voir modéle"

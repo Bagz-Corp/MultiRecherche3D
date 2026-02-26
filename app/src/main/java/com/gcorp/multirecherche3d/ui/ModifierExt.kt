@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -58,6 +60,17 @@ fun Modifier.shimmer(cornerRadius: Dp = 0.dp): Modifier {
         }
     }
 }
+
+fun Modifier.gradientBackground(topColor: Color, bottomColor: Color = Color.White): Modifier = composed {
+    drawWithContent {
+        drawRect(
+            brush = Brush.verticalGradient(listOf(topColor, bottomColor)),
+            size = size
+        )
+        drawContent()
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
